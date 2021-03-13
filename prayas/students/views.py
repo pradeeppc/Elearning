@@ -49,6 +49,7 @@ class StudentCourseListView(LoginRequiredMixin, ListView):
 
 
 class StudentCourseDetailView(DetailView):
+
     model = Course
     template_name = 'students/course/detail.html'
 
@@ -59,13 +60,18 @@ class StudentCourseDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(StudentCourseDetailView,
                         self).get_context_data(**kwargs)
+        print('\n\n')
+        print(context, 'context')
         # get course object
         course = self.get_object()
+        print(course, 'course')
         if 'module_id' in self.kwargs:
             # get current module
             context['module'] = course.modules.get(
                                     id=self.kwargs['module_id'])
+            print(context['module'], "context['module']")
         else:
             # get first module
             context['module'] = course.modules.all()[0]
+        print(context, '2222222222')
         return context

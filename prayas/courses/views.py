@@ -196,25 +196,28 @@ class CourseListView(TemplateResponseMixin, View):
     template_name = 'courses/course/list.html'
 
     def get(self, request, subject=None):
-        subjects = cache.get('all_subjects')
+        # subjects = cache.get('all_subjects')
+        subjects = None
         if not subjects:
             subjects = Subject.objects.annotate(
                            total_courses=Count('courses'))
-            cache.set('all_subjects', subjects)
+            # cache.set('all_subjects', subjects)
         all_courses = Course.objects.annotate(
                                    total_modules=Count('modules'))
         if subject:
             subject = get_object_or_404(Subject, slug=subject)
             key = 'subject_{}_courses'.format(subject.id)
-            courses = cache.get(key)
+            # courses = cache.get(key)
+            courses = None
             if not courses:
                 courses = all_courses.filter(subject=subject)
-                cache.set(key, courses)
+                # cache.set(key, courses)
         else:
-            courses = cache.get('all_courses')
+            # courses = cache.get('all_courses')
+            courses = None
             if not courses:
                 courses = all_courses
-                cache.set('all_courses', courses)
+                # cache.set('all_courses', courses)
         return self.render_to_response({'subjects': subjects,
                                         'subject': subject,
                                         'courses': courses})
